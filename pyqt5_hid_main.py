@@ -11,10 +11,10 @@ from PyQt5.QtCore import *
 NULL = 0
 INVALID_HANDLE_VALUE = -1
 DEVICE_NOTIFY_WINDOW_HANDLE = 0x00000000
-WM_DEVICECHANGE = 0x0219            # windows 系统设备变动事件序号
+WM_DEVICECHANGE = 0x0219           
 DBT_DEVTYP_DEVICEINTERFACE = 5
-DBT_DEVICEREMOVECOMPLETE = 0x8004   # windows 系统设备移出信息序号
-DBT_DEVICEARRIVAL = 0x8000          # windows 系统设备插入信息序号
+DBT_DEVICEREMOVECOMPLETE = 0x8004   
+DBT_DEVICEARRIVAL = 0x8000         
 
 
 user32 = ctypes.windll.user32
@@ -51,8 +51,8 @@ GUID_DEVINTERFACE_USB_DEVICE = GUID(0xA5DCBF10, 0x6530, 0x11D2,
                                     (ctypes.c_ubyte * 8)(0x90, 0x1F, 0x00, 0xC0, 0x4F, 0xB9, 0x51, 0xED))
 
 
-target_pid = 0xfe07  # 用你的目标PID替换这里
-target_vid = 0x1a86  # 用你的目标VID替换这里
+target_pid = 0xfe07 
+target_vid = 0x1a86 
 
 
 class Window(QWidget):
@@ -63,7 +63,7 @@ class Window(QWidget):
     def __init__(self, parent=None):
         super(Window, self).__init__(parent)
 
-        self.setupNotification()            # 调用注册 HID 设备热插拔事件函数
+        self.setupNotification()       
         self.initUI()
 
     def initUI(self):
@@ -74,7 +74,7 @@ class Window(QWidget):
         self.logEdit = QPlainTextEdit(self)
         vbox.addWidget(self.logEdit)
         self.setLayout(vbox)
-        self.open_hid()         # 程序启动即尝试打开 HID
+        self.open_hid()        
 
     def setupNotification(self):
         dbh = DEV_BROADCAST_DEVICEINTERFACE()
@@ -92,9 +92,9 @@ class Window(QWidget):
 
 
     def nativeEvent(self, eventType, msg):
-        message = MSG.from_address(msg.__int__())       # 获取系统传输消息参数的信息
-        if message.message == WM_DEVICECHANGE:          # 本例只处理设备热插拔，所以只添加 WM_DEVICECHANGE 事件的处理代码
-            self.onDeviceChanged(message.wParam, message.lParam)    # 调用自己写的设备热插拔处理函数
+        message = MSG.from_address(msg.__int__())       
+        if message.message == WM_DEVICECHANGE:          
+            self.onDeviceChanged(message.wParam, message.lParam)    
         return False, 0
 
 
@@ -120,8 +120,8 @@ class Window(QWidget):
     def open_hid(self):
         try:
             if self.hidStatus == False:
-                self.hidBdg.open(0x1A86, 0xFE07)  # VendorID/ProductID
-                self.hidBdg.set_nonblocking(1)  # hid device enable non-blocking modepp
+                self.hidBdg.open(0x1A86, 0xFE07)  
+                self.hidBdg.set_nonblocking(1) 
                 self.hidStatus = True
                 self.logEdit.appendHtml("<font color=blue>Device Arrival: connected</font>")
                 return self.hidStatus
